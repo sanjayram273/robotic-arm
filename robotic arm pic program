@@ -1,0 +1,93 @@
+#include "pic.h"
+#define motorf RC0
+#define motorr RC1
+#define sw1 RB7
+#define sw2 RB6
+bit motor_on;
+bit motor_off;
+Serial_Int_ON();
+Serial_Int_OFF();
+void bluetooth_Enter();
+String_Compare(unsigned char [],unsigned char []);
+char result_X=1;
+int main()
+{
+OPTION_REG=0;
+TRISC0=0;
+TRISC1=0;
+InitLCD();
+InitUART();
+WriteStringToLCD(0x80,"robotic hand");
+Serial_Int_ON();
+char nu=1;
+motorf=1;
+motorr=0;
+while(1)
+	{
+	if(!sw1)
+		{
+        while(!sw1);
+        motorf=1;
+        WriteStringToLCD(0x80,"motor forward");
+        __delay_ms(5000);
+        motorf=0;
+		}
+	 if(!sw2)
+		{
+		while(!sw2);
+        motorr=1;
+        WriteStringToLCD(0x80,"motor reverse");
+        __delay_ms(5000);
+        motorr=0;
+		}
+
+WriteStringToLCD(0xc0,Receive_Array);
+	WriteIntToLCD(0xcc,result_X,2);
+	
+	if(x=='9')
+			{
+            WriteStringToLCD(0xc0,"finger 1");
+			}
+		else if(x=='2')
+			{
+           WriteStringToLCD(0xc0,"finger 2");
+			}					
+		else if(x=='8')
+			{
+        WriteStringToLCD(0xc0,"finger 3");
+			}					
+		else if(x=='4')
+			{
+        WriteStringToLCD(0xc0,"finger 4");
+			}				
+		else if(x=='6')
+			{
+         WriteStringToLCD(0xc0,"finger 5");
+			}
+		}
+return 0;
+}
+
+Serial_Int_ON()
+{
+	GIE = 1;
+	PEIE = 1;
+}
+
+Serial_Int_OFF()
+{
+	GIE = 0; 
+	PEIE = 0;
+}
+
+void bluetoooth_Enter()
+{
+SendByteSerially (0x0d);
+SendByteSerially (0x0a);
+}
+String_Compare(unsigned char src[],unsigned char dest[])
+{
+	int i;
+	for(i=1;i<=10 && src[i] == dest[i];i++);
+	return src[i]-dest[i];
+}
